@@ -42,10 +42,3 @@ We welcome contributions! Please follow these steps to contribute:
 
 ## License
 This project is licensed under the MIT License. See the `LICENSE` file for more details.
-
-## Acknowledgements
-- Thanks to the community for their support and contributions.
-
----
-
-Feel free to customize this README further to fit your specific needs. Let me know if there’s anything else you’d like to add or adjust! 🚀📋
