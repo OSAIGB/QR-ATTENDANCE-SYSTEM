@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Students</title>
+</head>
+<body>
+  <h1>Students List</h1>
+  <button id="fetch-students">Fetch Students</button>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>First Name</th>
+        <th>Surname</th>
+        <th>Registration Number</th>
+      </tr>
+    </thead>
+    <tbody id="students-table">
+      <!-- Data will be inserted here -->
+    </tbody>
+  </table>
+
+  <script>
+    document.getElementById('fetch-students').addEventListener('click', async () => {
+      try {
+        const response = await fetch('/students');
+        const students = await response.json();
+        const tableBody = document.getElementById('students-table');
+        tableBody.innerHTML = ''; // Clear existing data
+        students.forEach(student => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${student.first_name}</td>
+            <td>${student.surname}</td>
+
+          `;
+          tableBody.appendChild(row);
+        });
+      } catch (error) {
+        console.error('Error fetching students:', error);
+      }
+    });
+  </script>
+</body>
+</html>

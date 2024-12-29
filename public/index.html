@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Students</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Students List</h1>
+    <div class="custom-dropdown">
+      <input type="text" id="search-box" placeholder="Search for a student...">
+      <select id="students-dropdown">
+        <option value="">Select a student</option>
+      </select>
+    </div>
+    <div id="registration-number" readonly></div> <!-- Uneditable box for registration number -->
+    <button id="mark-present-button">Mark Present</button> <!-- Mark Present button -->
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const response = await fetch('/students');
+        const students = await response.json();
+        console.log('Data received from server:', students); // Log the data
+        const dropdown = document.getElementById('students-dropdown');
+        const searchBox = document.getElementById('search-box');
+        dropdown.innerHTML = '<option value="">Select a student</option>'; // Clear existing options
+        students.forEach(student => {
+          const option = document.createElement('option');
+          option.value = student.registration_number;
+          option.textContent = `${student.first_name} ${student.surname}`;
+          dropdown.appendChild(option);
+        });
+
+        searchBox.addEventListener('input', () => {
+          const query = searchBox.value.toLowerCase();
+          dropdown.innerHTML = '<option value="">Select a student</option>'; // Clear existing options
+          students
+            .filter(student => `${student.first_name} ${student.surname}`.toLowerCase().includes(query))
+            .forEach(student => {
+              const option = document.createElement('option');
+              option.value = student.registration_number;
+              option.textContent = `${student.first_name} ${student.surname}`;
+              dropdown.appendChild(option);
+            });
+        });
+
+        dropdown.addEventListener('change', () => {
+          const selectedStudent = students.find(student => student.registration_number === dropdown.value);
+          const registrationBox = document.getElementById('registration-number');
+          if (selectedStudent) {
+            registrationBox.textContent = selectedStudent.registration_number;
+            registrationBox.dataset.firstName = selectedStudent.first_name;
+            registrationBox.dataset.surname = selectedStudent.surname;
+          } else {
+            registrationBox.textContent = '';
+            registrationBox.dataset.firstName = '';
+            registrationBox.dataset.surname = '';
+          }
+        });
+
+        document.getElementById('mark-present-button').addEventListener('click', async () => {
+          const registrationBox = document.getElementById('registration-number');
+          if (registrationBox.textContent) {
+            try {
+              const response = await fetch('/mark-present', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  registration_number: registrationBox.textContent,
+                  first_name: registrationBox.dataset.firstName,
+                  surname: registrationBox.dataset.surname
+                })
+              });
+              const result = await response.json();
+              alert(result.message);
+            } catch (error) {
+              console.error('Error marking student as present:', error);
+              alert('Failed to mark student as present');
+            }
+          } else {
+            alert('Please select a student first.');
+          }
+        });
+      } catch (error) {
+        console.error('Error fetching students:', error);
+      }
+    });
+  </script>
+</body>
+</html>

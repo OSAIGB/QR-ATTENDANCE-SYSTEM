@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "pg": "^8.13.1"
+  },
+  "name": "qr-attendance-system",
+  "version": "1.0.0",
+  "description": "This repository contains the source code and resources for a web-based attendance system that utilizes QR codes. The system is designed to simplify attendance tracking by allowing users to scan QR codes, search for names, and mark attendance.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
